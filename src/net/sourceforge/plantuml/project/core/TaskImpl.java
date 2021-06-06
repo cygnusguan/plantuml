@@ -119,6 +119,12 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 			if (res.isClosedAt(instant)) {
 				return 0;
 			}
+			if (this.defaultPlan instanceof OpenClose){
+				if (((OpenClose)this.defaultPlan).isClosed(instant)){
+					return 0;
+				}
+			}
+
 			return resources.get(res);
 		}
 		return 0;
