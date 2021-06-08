@@ -67,7 +67,8 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 	private final LoadPlanable defaultPlan;
 	private boolean diamond;
 
-	private int completion = 100;
+	//the default completion change to zero
+	private int completion = 0;
 	private Display note;
 
 	private Url url;
@@ -111,6 +112,14 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 			}
 		}
 		return false;
+	}
+
+	/**Get first resource as the main user for this task.*/
+	public Resource getFirstResource(){
+		if (resources.isEmpty()){
+			return null;
+		}
+		return  resources.entrySet().iterator().next().getKey();
 	}
 
 	public int loadForResource(Resource res, Day instant) {
@@ -159,8 +168,14 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 	}
 
 	public String getPrettyDisplay() {
+		final StringBuilder result = new StringBuilder();
+		if (completion != 100){
+			result.append("<");
+			result.append(completion);
+			result.append("%>");
+		}
+		result.append(getCode().getSimpleDisplay());
 		if (resources.size() > 0) {
-			final StringBuilder result = new StringBuilder(getCode().getSimpleDisplay());
 			result.append(" ");
 			for (Iterator<Map.Entry<Resource, Integer>> it = resources.entrySet().iterator(); it.hasNext();) {
 				final Map.Entry<Resource, Integer> ent = it.next();
@@ -168,7 +183,8 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 				result.append(ent.getKey().getName());
 				final int percentage = ent.getValue();
 				if (percentage != 100) {
-					result.append(":" + percentage + "%");
+					//result.append(":" + percentage + "%");
+					result.append(":" + (percentage/100.0) );
 				}
 				result.append("}");
 				if (it.hasNext()) {
@@ -177,7 +193,7 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 			}
 			return result.toString();
 		}
-		return getCode().getSimpleDisplay();
+		return result.toString();
 	}
 
 	@Override

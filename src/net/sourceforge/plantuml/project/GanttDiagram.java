@@ -50,11 +50,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.plantuml.Dimension2DDouble;
-import net.sourceforge.plantuml.FileFormatOption;
-import net.sourceforge.plantuml.TitledDiagram;
-import net.sourceforge.plantuml.UmlDiagramType;
-import net.sourceforge.plantuml.WithSprite;
+import net.sourceforge.plantuml.*;
 import net.sourceforge.plantuml.command.CommandExecutionResult;
 import net.sourceforge.plantuml.core.DiagramDescription;
 import net.sourceforge.plantuml.core.ImageData;
@@ -64,6 +60,7 @@ import net.sourceforge.plantuml.graphic.HorizontalAlignment;
 import net.sourceforge.plantuml.graphic.InnerStrategy;
 import net.sourceforge.plantuml.graphic.StringBounder;
 import net.sourceforge.plantuml.graphic.UDrawable;
+import net.sourceforge.plantuml.logo.PSystemLogoFactory;
 import net.sourceforge.plantuml.project.core.Moment;
 import net.sourceforge.plantuml.project.core.MomentImpl;
 import net.sourceforge.plantuml.project.core.PrintScale;
@@ -218,6 +215,29 @@ public class GanttDiagram extends TitledDiagram implements ToTaskDraw, WithSprit
 			this.max = printEnd;
 		}
 		final TimeHeader timeHeader = getTimeHeader();
+		//DEBUG tasks
+		Map<Resource,List<TaskImpl>> resourceListMap = new HashMap<>();
+		for (Task t : tasks.values()){
+			if (t instanceof  TaskImpl){
+				TaskImpl ti = (TaskImpl)t;
+				Resource r = ti.getFirstResource();
+				if (r == null) {
+					continue;
+				}
+				List<TaskImpl> tiList = resourceListMap.get(r);
+				if (tiList == null){
+					tiList = new ArrayList<>();
+					tiList.add(ti);
+					resourceListMap.put(r,tiList);
+				} else {
+					tiList.add(ti);
+				}
+			}
+		}
+		for (Resource r : resourceListMap.keySet()){
+			Log.info(r.getName() + ":" + resourceListMap.get(r));
+		}
+
 		initTaskAndResourceDraws(timeHeader.getTimeScale(), timeHeader.getFullHeaderHeight(), stringBounder);
 		return new TextBlockBackcolored() {
 
