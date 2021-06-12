@@ -35,10 +35,7 @@
  */
 package net.sourceforge.plantuml.project.draw;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import net.sourceforge.plantuml.sequencediagram.graphic.Segment;
 import net.sourceforge.plantuml.ugraphic.UGraphic;
@@ -59,7 +56,8 @@ public class RectangleTask {
 		this.round = round;
 		this.completion = completion;
 		if (startPos < endPos) {
-			this.segments = new ArrayList<>(new Segment(startPos, endPos).cutSegmentIfNeed(paused));
+			//this.segments = new ArrayList<>(new Segment(startPos, endPos).cutSegmentIfNeed(paused));
+			this.segments = Arrays.asList(new Segment(startPos, endPos));
 		} else {
 			this.segments = Collections.singletonList(new Segment(startPos, startPos + 1));
 		}

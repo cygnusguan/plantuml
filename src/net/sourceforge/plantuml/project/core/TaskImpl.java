@@ -169,7 +169,7 @@ public class TaskImpl extends AbstractTask implements Task, LoadPlanable {
 
 	public String getPrettyDisplay() {
 		final StringBuilder result = new StringBuilder();
-		if (completion != 100){
+		if (completion != 100 && completion != 0 ){
 			result.append("<");
 			result.append(completion);
 			result.append("%>");
